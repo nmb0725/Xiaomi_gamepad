@@ -1,0 +1,7 @@
+L:\git\Xiaomi_gamepad\mi\bin\Debug\mi.exe.config
+L:\git\Xiaomi_gamepad\mi\bin\Debug\mi.exe
+L:\git\Xiaomi_gamepad\mi\bin\Debug\mi.pdb
+L:\git\Xiaomi_gamepad\mi\obj\Debug\mi.csproj.AssemblyReference.cache
+L:\git\Xiaomi_gamepad\mi\obj\Debug\mi.csproj.CoreCompileInputs.cache
+L:\git\Xiaomi_gamepad\mi\obj\Debug\mi.exe
+L:\git\Xiaomi_gamepad\mi\obj\Debug\mi.pdb
