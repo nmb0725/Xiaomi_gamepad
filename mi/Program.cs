@@ -50,6 +50,13 @@ namespace mi
             }
         }
 
+private int convert_number(int num) {
+
+    if (num <= 128) return 255- (128 - num);
+    else return (num - 128);
+    
+
+}
         private void input_thread(HidDevice Device, ScpBus scpBus, int index)
         {
             scpBus.PlugIn(index);
@@ -57,45 +64,51 @@ namespace mi
             int timeout = 30;
             long last_changed = 0;
             long last_mi_button = 0;
+               
             while (true)
             {
                 HidDeviceData data = Device.Read(timeout);
                 var currentState = data.Data;
                 bool changed = false;
-                if (data.Status == HidDeviceData.ReadStatus.Success && currentState.Length >= 21 && currentState[0] == 4)
+                
+               // if (data.Status == 0 )
+                if (data.Status == HidDeviceData.ReadStatus.Success && currentState.Length >= 11 && currentState[0] == 3)
                 {
-                    //Console.WriteLine(Program.ByteArrayToHexString(currentState));
+//Console.WriteLine(currentState.Length);
+//Console.WriteLine((string.Join(", ",currentState)));
+//Console.WriteLine(Program.ByteArrayToHexString(currentState));
+                 // continue;
                     X360Buttons Buttons = X360Buttons.None;
-                    if ((currentState[1] & 1) != 0) Buttons |= X360Buttons.A;
-                    if ((currentState[1] & 2) != 0) Buttons |= X360Buttons.B;
-                    if ((currentState[1] & 8) != 0) Buttons |= X360Buttons.X;
-                    if ((currentState[1] & 16) != 0) Buttons |= X360Buttons.Y;
-                    if ((currentState[1] & 64) != 0) Buttons |= X360Buttons.LeftBumper;
-                    if ((currentState[1] & 128) != 0) Buttons |= X360Buttons.RightBumper;
+                    if ((currentState[3] & 1) != 0) Buttons |= X360Buttons.A;
+                    if ((currentState[3] & 2) != 0) Buttons |= X360Buttons.B;
+                    if ((currentState[3] & 8) != 0) Buttons |= X360Buttons.X;
+                    if ((currentState[3] & 16) != 0) Buttons |= X360Buttons.Y;
+                    if ((currentState[3] & 64) != 0) Buttons |= X360Buttons.LeftBumper;
+                    if ((currentState[3] & 128) != 0) Buttons |= X360Buttons.RightBumper;
 
-                    if ((currentState[2] & 32) != 0) Buttons |= X360Buttons.LeftStick;
-                    if ((currentState[2] & 64) != 0) Buttons |= X360Buttons.RightStick;
+                    if ((currentState[4] & 32) != 0) Buttons |= X360Buttons.LeftStick;
+                    if ((currentState[4] & 64) != 0) Buttons |= X360Buttons.RightStick;
 
-                    if (currentState[4] != 15)
+                    if (currentState[2] != 15)
                     {
-                        if (currentState[4] == 0 || currentState[4] == 1 || currentState[4] == 7) Buttons |= X360Buttons.Up;
-                        if (currentState[4] == 4 || currentState[4] == 3 || currentState[4] == 5) Buttons |= X360Buttons.Down;
-                        if (currentState[4] == 6 || currentState[4] == 5 || currentState[4] == 7) Buttons |= X360Buttons.Left;
-                        if (currentState[4] == 2 || currentState[4] == 1 || currentState[4] == 3) Buttons |= X360Buttons.Right;
+                        if (currentState[2] == 0 || currentState[2] == 1 || currentState[2] == 7) Buttons |= X360Buttons.Up;
+                        if (currentState[2] == 4 || currentState[2] == 3 || currentState[2] == 5) Buttons |= X360Buttons.Down;
+                        if (currentState[2] == 6 || currentState[2] == 5 || currentState[2] == 7) Buttons |= X360Buttons.Left;
+                        if (currentState[2] == 2 || currentState[2] == 1 || currentState[2] == 3) Buttons |= X360Buttons.Right;
                     }
 
-                    if ((currentState[2] & 8) != 0) Buttons |= X360Buttons.Start;
-                    if ((currentState[2] & 4) != 0) Buttons |= X360Buttons.Back;
+                    if ((currentState[4] & 8) != 0) Buttons |= X360Buttons.Start;
+                    if ((currentState[4] & 4) != 0) Buttons |= X360Buttons.Back;
 
 
 
-                    if ((currentState[20] & 1) != 0)
+                   /* if ((currentState[20] & 1) != 0)
                     {
                         last_mi_button = (DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond);
                         Buttons |= X360Buttons.Logo;
                     }
                     if (last_mi_button != 0) Buttons |= X360Buttons.Logo;
-
+*/
 
                     if (controller.Buttons != Buttons)
                     {
@@ -103,7 +116,7 @@ namespace mi
                         controller.Buttons = Buttons;
                     }
 
-                    short LeftStickX = (short)((Math.Max(-127.0, currentState[5] - 128) / 127) * 32767);
+                    short LeftStickX = (short)((Math.Max(-127.0, convert_number(currentState[5]) - 128) / 127) * 32767);
                     if (LeftStickX == -32767)
                         LeftStickX = -32768;
 
@@ -113,7 +126,7 @@ namespace mi
                         controller.LeftStickX = LeftStickX;
                     }
 
-                    short LeftStickY = (short)((Math.Max(-127.0, currentState[6] - 128) / 127) * -32767);
+                    short LeftStickY = (short)((Math.Max(-127.0, convert_number(currentState[6]) - 128) / 127) * -32767);
                     if (LeftStickY == -32767)
                         LeftStickY = -32768;
 
@@ -123,7 +136,7 @@ namespace mi
                         controller.LeftStickY = LeftStickY;
                     }
 
-                    short RightStickX = (short)((Math.Max(-127.0, currentState[7] - 128) / 127) * 32767);
+                    short RightStickX = (short)((Math.Max(-127.0, convert_number(currentState[7]) - 128) / 127) * 32767);
                     if (RightStickX == -32767)
                         RightStickX = -32768;
 
@@ -133,7 +146,7 @@ namespace mi
                         controller.RightStickX = RightStickX;
                     }
 
-                    short RightStickY = (short)((Math.Max(-127.0, currentState[8] - 128) / 127) * -32767);
+                    short RightStickY = (short)((Math.Max(-127.0, convert_number(currentState[8]) - 128) / 127) * -32767);
                     if (RightStickY == -32767)
                         RightStickY = -32768;
 
@@ -143,16 +156,16 @@ namespace mi
                         controller.RightStickY = RightStickY;
                     }
 
-                    if (controller.LeftTrigger != currentState[11])
+                    if (controller.LeftTrigger != currentState[9])
                     {
                         changed = true;
-                        controller.LeftTrigger = currentState[11];
+                        controller.LeftTrigger = currentState[9];
                     }
 
-                    if (controller.RightTrigger != currentState[12])
+                    if (controller.RightTrigger != currentState[10])
                     {
                         changed = true;
-                        controller.RightTrigger = currentState[12];
+                        controller.RightTrigger = currentState[10];
 
                     }
                 }
@@ -236,10 +249,12 @@ namespace mi
 
             Xiaomi_gamepad[] gamepads = new Xiaomi_gamepad[4];
             int index = 1;
-            var compatibleDevices = HidDevices.Enumerate(0x2717, 0x3144).ToList();
+//            var compatibleDevices = HidDevices.Enumerate(0x2717, 0x3144).ToList();
+var compatibleDevices = HidDevices.Enumerate(0x20BC, 0x505E).ToList();
             foreach (var deviceInstance in compatibleDevices)
             {
                 Console.WriteLine(deviceInstance);
+                if (deviceInstance.ToString().IndexOf("&col03#")<0) continue;
                 HidDevice Device = deviceInstance;
                 try
                 {
@@ -248,6 +263,7 @@ namespace mi
                 catch
                 {
                     Console.WriteLine("Could not open gamepad in exclusive mode. Try re-enable device.");
+                   
                     var instanceId = devicePathToInstanceId(deviceInstance.DevicePath);
                     if (TryReEnableDevice(instanceId))
                     {
@@ -258,24 +274,40 @@ namespace mi
                         }
                         catch
                         {
+                            try
+                        {
                             Device.OpenDevice(DeviceMode.Overlapped, DeviceMode.Overlapped, ShareMode.ShareRead | ShareMode.ShareWrite);
                             Console.WriteLine("Opened in shared mode.");
+                        }
+                        catch
+                        {
+                            Console.WriteLine("break");
+                            continue;
+                            }
                         }
                     }
                     else
                     {
+                        try
+                        {
                         Device.OpenDevice(DeviceMode.Overlapped, DeviceMode.Overlapped, ShareMode.ShareRead | ShareMode.ShareWrite);
                         Console.WriteLine("Opened in shared mode.");
+                        }
+                        catch
+                        {
+                            Console.WriteLine("break");
+                            continue;
+                            }
                     }
                 }
 
                 byte[] Vibration = { 0x20, 0x00, 0x00 };
-                if (Device.WriteFeatureData(Vibration) == false)
+             /*   if (Device.WriteFeatureData(Vibration) == false)
                 {
                     Console.WriteLine("Could not write to gamepad (is it closed?), skipping");
-                    Device.CloseDevice();
-                    continue;
-                }
+           //         Device.CloseDevice();
+             //       continue;
+                }*/
 
                 byte[] serialNumber;
                 byte[] product;
@@ -286,6 +318,7 @@ namespace mi
                 gamepads[index - 1] = new Xiaomi_gamepad(Device, scpBus, index);
                 ++index;
 
+                //if (index >= 5)
                 if (index >= 5)
                 {
                     break;
