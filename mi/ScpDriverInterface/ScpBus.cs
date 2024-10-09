@@ -200,7 +200,16 @@ namespace ScpDriverInterface
 			Buffer.BlockCopy(controllerReport, 0, fullReport, head.Length, controllerReport.Length);
 
 			int transferred = 0;
-			return NativeMethods.DeviceIoControl(_deviceHandle, 0x2A400C, fullReport, fullReport.Length, outputBuffer, outputBuffer?.Length ?? 0, ref transferred, IntPtr.Zero) && transferred > 0;
+bool success = false;
+int lout = 0;
+if (outputBuffer != null) lout = outputBuffer.Length;
+
+    success = NativeMethods.DeviceIoControl(_deviceHandle, 0x2A400C, fullReport, fullReport.Length, outputBuffer, lout, ref transferred, IntPtr.Zero);
+return success && transferred > 0;
+
+
+
+			//return NativeMethods.DeviceIoControl(_deviceHandle, 0x2A400C, fullReport, fullReport.Length, outputBuffer, outputBuffer?.Length ?? 0, ref transferred, IntPtr.Zero) && transferred > 0;
 		}
 
 		private static bool Find(Guid target, ref string path, int instance = 0)

@@ -1,0 +1,9 @@
+L:\git\Xiaomi_gamepad14\mi\obj\Debug\mi.AboutBox.resources
+L:\git\Xiaomi_gamepad14\mi\obj\Debug\mi.csproj.GenerateResource.Cache
+L:\git\Xiaomi_gamepad14\mi\obj\Debug\mi.csprojResolveAssemblyReference.cache
+L:\git\Xiaomi_gamepad14\mi\bin\Debug\jzv3n.exe.config
+L:\git\Xiaomi_gamepad14\mi\bin\Debug\jzv3n.exe
+L:\git\Xiaomi_gamepad14\mi\bin\Debug\jzv3n.pdb
+L:\git\Xiaomi_gamepad14\mi\obj\Debug\jzv3n.exe
+L:\git\Xiaomi_gamepad14\mi\obj\Debug\jzv3n.pdb
+L:\git\Xiaomi_gamepad14\mi\obj\Debug\jzv3n.Properties.Resources.resources

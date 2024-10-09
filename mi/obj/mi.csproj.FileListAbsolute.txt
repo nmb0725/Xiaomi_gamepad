@@ -1,0 +1,6 @@
+L:\git\Xiaomi_gamepad14\mi\obj\Debug\ResolveAssemblyReference.cache
+L:\git\Xiaomi_gamepad14\mi\obj\Debug\mi.AboutBox.resources
+L:\git\Xiaomi_gamepad14\mi\obj\Debug\mi.Properties.Resources.resources
+L:\git\Xiaomi_gamepad14\mi\obj\Debug\mi.csproj.GenerateResource.Cache
+L:\git\Xiaomi_gamepad14\mi\obj\Debug\mi.exe
+L:\git\Xiaomi_gamepad14\mi\obj\Debug\mi.pdb

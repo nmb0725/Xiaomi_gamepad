@@ -135,7 +135,7 @@
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "About Mi controller";
+			this.Text = "About JD controller";
 			this.Load += new System.EventHandler(this.AboutBox_Load);
 			this.tableLayoutPanel.ResumeLayout(false);
 			this.tableLayoutPanel.PerformLayout();

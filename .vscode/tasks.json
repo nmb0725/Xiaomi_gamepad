@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\MSBuild.exe",
+            "args": [
+                "${workspaceFolder}/mi/mi.csproj", // 你的项目文件路径
+                "/t:Build", // 指定构建目标
+                "/p:Configuration=Release" // 指定配置，可以改为Release
+            ],
+            "group": "build",
+            "presentation": {
+                //"reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}

@@ -1,0 +1,1 @@
+									InformUser("Could not open gamepad in exclusive mode. Try reconnecting the device.");

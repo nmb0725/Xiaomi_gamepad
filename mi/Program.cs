@@ -44,6 +44,7 @@ namespace mi
 		static void Main(string[] args)
 		{
 			if (!IsSingleInstance()) Environment.Exit(0);
+		//	 Gamepads = new List<Xiaomi_gamepad>();
 			NIcon = new NotifyIcon();
 			ScpBus scpBus = new ScpBus();
 			scpBus.UnplugAll();
@@ -109,19 +110,23 @@ namespace mi
 			var nrConnected = 0;
 			while (true)
 			{
-				var compatibleDevices = HidDevices.Enumerate(0x2717, 0x3144).ToList();
+				//var compatibleDevices = HidDevices.Enumerate(0x2717, 0x3144).ToList();
+				
+				var compatibleDevices = HidDevices.Enumerate(0x20BC, 0x505E).ToList();
 				var existingDevices = Gamepads.Select(g => g.Device).ToList();
 				var newDevices = compatibleDevices.Where(d => !existingDevices.Select(e => e.DevicePath).Contains(d.DevicePath));
-				foreach (var gamepad in Gamepads.ToList())
+				/*foreach (var gamepad in Gamepads.ToList())
 				{
 					if (!gamepad.check_connected())
 					{
 						gamepad.unplug();
 						Gamepads.Remove(gamepad);
 					}
-				}
+				}*/
+
 				foreach (var deviceInstance in newDevices)
 				{
+					if (deviceInstance.ToString().IndexOf("&col03#")<0) continue;
 					var device = deviceInstance;
 					try
 					{
@@ -140,23 +145,39 @@ namespace mi
 							}
 							catch
 							{
+						try
+                        {
 								device.OpenDevice(DeviceMode.Overlapped, DeviceMode.Overlapped, ShareMode.ShareRead | ShareMode.ShareWrite);
 								//InformUser("Opened in shared mode.");
+						}
+						catch
+                        {
+                            Console.WriteLine("break");
+                            continue;
+                            }
 							}
 						}
 						else
 						{
+							try
+                        {
 							device.OpenDevice(DeviceMode.Overlapped, DeviceMode.Overlapped, ShareMode.ShareRead | ShareMode.ShareWrite);
 							//InformUser("Opened in shared mode.");
+							}
+						catch
+                        {
+                            Console.WriteLine("break");
+                            continue;
+                            }
 						}
 					}
 
-					byte[] vibration = { 0x20, 0x00, 0x00 };
-					if (device.WriteFeatureData(vibration) == false)
+					byte[] vibration = { 0x00, 0x00, 0x00, 0x00, 0x00 };
+					if (device.Write(vibration) == false)
 					{
 						InformUser("Could not write to gamepad (is it closed?), skipping");
-						device.CloseDevice();
-						continue;
+				//		device.CloseDevice();
+				//		continue;
 					}
 
 					byte[] serialNumber;
@@ -175,7 +196,7 @@ namespace mi
 				}
 				if (Gamepads.Count != nrConnected)
 				{
-					InformUser($"{Gamepads.Count} controllers connected");
+					InformUser(Gamepads.Count+" controllers connected");
 				}
 				Thread.Sleep(1000);
 			}
@@ -185,7 +206,7 @@ namespace mi
 		{
 			NIcon.Text = "Export Datatable Utlity";
 			NIcon.Visible = true;
-			NIcon.BalloonTipTitle = "Mi controller";
+			NIcon.BalloonTipTitle = "JD controller";
 			NIcon.BalloonTipText = text;
 			NIcon.ShowBalloonTip(100);
 			//var content = new ToastContent()
@@ -216,7 +237,7 @@ namespace mi
 			//ToastNotificationManager.CreateToastNotifier().Show(toast);
 		}
 
-		public static List<Xiaomi_gamepad> Gamepads { get; set; } = new List<Xiaomi_gamepad>();
+		public static List<Xiaomi_gamepad> Gamepads = new List<Xiaomi_gamepad>();
 
 		private static bool TryReEnableDevice(string deviceInstanceId)
 		{
