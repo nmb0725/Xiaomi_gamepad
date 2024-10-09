@@ -68,12 +68,9 @@ namespace mi
 			}
 		}
 private int convert_number(int num) {
-
-    if (num <= 128) return 255- (128 - num);
-    else return (num - 128);
-    
-
-}
+	if (num == 0) return 128;
+    return (num <= 127) ? num + 128 : num - 128;
+  }
 		private void input_thread(HidDevice Device, ScpBus scpBus, int index)
 		{
 			scpBus.PlugIn(index);
