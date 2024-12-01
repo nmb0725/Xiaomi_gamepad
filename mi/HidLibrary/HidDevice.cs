@@ -378,13 +378,18 @@ namespace HidLibrary
 
         public bool WriteFeatureData(byte[] data)
         {
-            if (_deviceCapabilities.FeatureReportByteLength <= 0) return false;
+//Console.WriteLine((string.Join(", ",data)));
+//Console.WriteLine(_deviceCapabilities.InputReportByteLength);
+//Console.WriteLine(_deviceCapabilities.FeatureReportByteLength);
 
-            var buffer = CreateFeatureOutputBuffer();
+         //   if (_deviceCapabilities.FeatureReportByteLength <= 0) return false;
 
-            Array.Copy(data, 0, buffer, 0, Math.Min(data.Length, _deviceCapabilities.FeatureReportByteLength));
-
-
+byte[] buffer = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  };
+Array.Copy(data, 0, buffer, 0, Math.Min(data.Length, buffer.Length));
+//var buffer = CreateFeatureOutputBuffer();
+//Array.Copy(data, 0, buffer, 0, Math.Min(data.Length, _deviceCapabilities.FeatureReportByteLength));
+//buffer = data;
+//Console.WriteLine(("sss" +string.Join(", ",buffer)));
             IntPtr hidHandle = IntPtr.Zero;
             bool success = false;
             try
@@ -395,10 +400,14 @@ namespace HidLibrary
                     return false;
 
                 //var overlapped = new NativeOverlapped();
+                
                 success = NativeMethods.HidD_SetFeature(hidHandle, buffer, buffer.Length);
+
+//Console.WriteLine(("aaa" + string.Join(", ",buffer)));                
             }
             catch (Exception exception)
             {
+                Console.WriteLine(_devicePath);
                 throw new Exception(string.Format("Error accessing HID device '{0}'.", _devicePath), exception);
             }
 
